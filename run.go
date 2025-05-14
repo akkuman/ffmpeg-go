@@ -265,10 +265,13 @@ func (s *Stream) Compile(options ...CompilationOption) *exec.Cmd {
 	if a, ok := s.Context.Value("Stderr").(io.Writer); ok {
 		cmd.Stderr = a
 	}
+	for _, option := range options {
+		option(s, cmd)
+	}
 	for _, option := range GlobalCommandOptions {
 		option(cmd)
 	}
-  if LogCompiledCommand {
+  	if LogCompiledCommand {
 		log.Printf("compiled command: ffmpeg %s\n", strings.Join(args, " "))
 	}
 	return cmd
